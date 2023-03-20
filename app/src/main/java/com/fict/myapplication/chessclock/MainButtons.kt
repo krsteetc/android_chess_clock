@@ -1,5 +1,7 @@
 package com.fict.myapplication.chessclock
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -7,20 +9,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ClockButton(size : Float, rotateAngle : Float, checkIt : Boolean){
+fun ClockButton(rotateAngle : Float, checkIt : Boolean){
 
-    Button(onClick = { /*TODO*/ },
+    Button(onClick = {
+                   //Modif  countTime.background(DarkGreen)
+                     },
 
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(size)) {
+            .fillMaxHeight()){
 
         Column(
 
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.weight(45f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
 
@@ -59,30 +65,46 @@ fun ClockButton(size : Float, rotateAngle : Float, checkIt : Boolean){
 
 @Composable
 fun PlayButton(){
-    Button(onClick = { /*TODO*/ }) {
+    Image(
+        painterResource(R.drawable.play_button),
+        contentDescription = "",
+        modifier = Modifier
+            .size(40.dp)
+            .clickable { /*TODO*/ }
+    )
 
-        //Icon(painter = painterResource(id = R.drawable.play_button), contentDescription = "play")
-    }
 }
 
 
 @Composable
 fun ResetButton(){
-    Button(onClick = { /*TODO*/ }) {
-
-    }
+    Image(
+        painterResource(R.drawable.replay_button),
+        contentDescription = "",
+        modifier = Modifier
+            .size(40.dp)
+            .clickable { /*TODO*/ }
+    )
 }
 
 @Composable
 fun TimeButton(){
-    Button(onClick = { /*TODO*/ }) {
-
-    }
+    Image(
+        painterResource(R.drawable.time_button),
+        contentDescription = "",
+        modifier = Modifier
+            .size(40.dp)
+            .clickable { /*TODO*/ }
+    )
 }
 
 @Composable
 fun SoundButton(){
-    Button(onClick = { /*TODO*/ }) {
-
-    }
+    Image(
+        painterResource(R.drawable.sound_button),
+        contentDescription = "",
+        modifier = Modifier
+            .size(40.dp)
+            .clickable { /*TODO*/ }
+    )
 }
