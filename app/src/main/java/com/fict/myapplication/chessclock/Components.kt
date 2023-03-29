@@ -6,37 +6,47 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fict.example.componentsplayground.activities.tempates.MainViewModel
 import com.fict.myapplication.chessclock.ui.theme.darkGreen
 
 //fun ClickedButton1(btn : Button){
 //    btn(
- //       colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)
- //   ){}
+//       colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)
+//   ){}
 //}
 //fun ClickedButton2(btn : Button){
- //   btn
+//   btn
 //}
+
+//todo rename white and black instead of player1/2
 @Composable
-fun Player1(){
-    Button(onClick = {
+fun Player1(viewModel: MainViewModel) {
 
-        clicked1 = true
-        clicked2 = false
+    val uiState by viewModel.uiState.collectAsState()
+    val whiteTime = "${uiState.whiteTime / 60} : ${uiState.whiteTime % 60}" //todo add formatting and conversion
 
-    },
-        colors = ButtonDefaults.buttonColors(backgroundColor = if(clicked2) colors.darkGreen else colors.primary),
+    Button(
+        onClick = {
+            clicked1 = true
+            clicked2 = false
+
+            viewModel.setWhiteTime(15L)
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (clicked2) colors.darkGreen else colors.primary),
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()){
+            .fillMaxHeight()
+    ) {
 
         Column(
-
             modifier = Modifier.weight(45f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -46,30 +56,37 @@ fun Player1(){
                 text = "Moves: ",
                 modifier = Modifier.rotate(180f),
             )
-                Text(
-                    text = "10:00",
-                    modifier = Modifier.rotate(180f),
-                    fontSize = 100.sp
-                )
+
+            Text(
+                text = "$whiteTime",
+                modifier = Modifier.rotate(180f),
+                fontSize = 100.sp
+            )
 
         }
     }
 }
 
 @Composable
-fun Player2(){
-    Button(onClick = {
+fun Player2(viewModel: MainViewModel) {
 
-        clicked2 = true
-        clicked1 = false
-        //startTimer()
+    val uiState by viewModel.uiState.collectAsState()
+    val blackTime = uiState.blackTime //todo add formatting and conversion
 
-    },
+    Button(
+        onClick = {
 
-        colors = ButtonDefaults.buttonColors(backgroundColor = if(clicked1) colors.darkGreen else colors.primary),
+            clicked2 = true
+            clicked1 = false
+            //startTimer()
+            viewModel.startGame()
+        },
+
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (clicked1) colors.darkGreen else colors.primary),
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()){
+            .fillMaxHeight()
+    ) {
 
         Column(
 
@@ -79,7 +96,7 @@ fun Player2(){
 
         ) {
             Text(
-                text = "10:00",
+                text = "$blackTime",
                 fontSize = 100.sp
             )
 
@@ -106,7 +123,7 @@ fun Player2(){
 
 
 @Composable
-fun PlayButton(){
+fun PlayButton() {
     Image(
         painterResource(R.drawable.play_button),
         contentDescription = "",
@@ -114,12 +131,10 @@ fun PlayButton(){
             .size(40.dp)
             .clickable { /*TODO*/ }
     )
-
 }
 
-
 @Composable
-fun ResetButton(){
+fun ResetButton() {
     Image(
         painterResource(R.drawable.replay_button),
         contentDescription = "",
@@ -130,7 +145,7 @@ fun ResetButton(){
 }
 
 @Composable
-fun TimeButton(){
+fun TimeButton() {
     Image(
         painterResource(R.drawable.time_button),
         contentDescription = "",
@@ -141,7 +156,7 @@ fun TimeButton(){
 }
 
 @Composable
-fun SoundButton(){
+fun SoundButton() {
     Image(
         painterResource(R.drawable.sound_button),
         contentDescription = "",

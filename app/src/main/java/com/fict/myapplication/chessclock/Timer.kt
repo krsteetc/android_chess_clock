@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
+
+// TODO: delete me
+
 //class  Timer : ViewModel() {
 //    private var countDownTimer: CountDownTimer? = null
 //
