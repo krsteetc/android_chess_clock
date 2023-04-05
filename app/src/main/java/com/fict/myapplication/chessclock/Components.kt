@@ -17,30 +17,24 @@ import androidx.compose.ui.unit.sp
 import com.fict.example.componentsplayground.activities.tempates.MainViewModel
 import com.fict.myapplication.chessclock.ui.theme.darkGreen
 
-//fun ClickedButton1(btn : Button){
-//    btn(
-//       colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow)
-//   ){}
-//}
-//fun ClickedButton2(btn : Button){
-//   btn
-//}
 
-//todo rename white and black instead of player1/2
 @Composable
 fun Player1(viewModel: MainViewModel) {
 
     val uiState by viewModel.uiState.collectAsState()
-    val whiteTime = "${uiState.whiteTime / 60} : ${uiState.whiteTime % 60}" //todo add formatting and conversion
+    val whiteTime =
+        "${uiState.player1TimeToDisplay / 60} : ${uiState.player1TimeToDisplay % 60}" //todo add formatting and conversion
 
     Button(
         onClick = {
-            clicked1 = true
-            clicked2 = false
-
-            viewModel.setWhiteTime(15L)
+            isPlayer1Turn = false
+            if (!isGameStarted) {
+                viewModel.startGame()
+            } else {
+                viewModel.switchTurn()
+            }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = if (clicked2) colors.darkGreen else colors.primary),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (isGameStarted && isPlayer1Turn) colors.darkGreen else colors.primary),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -71,18 +65,20 @@ fun Player1(viewModel: MainViewModel) {
 fun Player2(viewModel: MainViewModel) {
 
     val uiState by viewModel.uiState.collectAsState()
-    val blackTime = uiState.blackTime //todo add formatting and conversion
+    val blackTime =
+        "${uiState.player2TimeToDisplay / 60} : ${uiState.player2TimeToDisplay % 60}"  //todo add formatting and conversion
 
     Button(
         onClick = {
-
-            clicked2 = true
-            clicked1 = false
-            //startTimer()
-            viewModel.startGame()
+            isPlayer1Turn = true
+            if (!isGameStarted) {
+                viewModel.startGame()
+            } else {
+                viewModel.switchTurn()
+            }
         },
 
-        colors = ButtonDefaults.buttonColors(backgroundColor = if (clicked1) colors.darkGreen else colors.primary),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (isGameStarted && !isPlayer1Turn) colors.darkGreen else colors.primary),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -107,40 +103,31 @@ fun Player2(viewModel: MainViewModel) {
     }
 }
 
-//@Composable
-//fun CountDownView(viewModel: Timer = androidx.lifecycle.viewmodel.compose.viewModel()) {
-//
-//    val time by viewModel.time.observeAsState(Utility.TIME_COUNTDOWN.formatTime())
-//    val progress by viewModel.progress.observeAsState(1.00F)
-//    val isPlaying by viewModel.isPlaying.observeAsState(false)
-//    val celebrate by viewModel.celebrate.observeAsState(false)
-//
-//    CountDownView(time = time, progress = progress, isPlaying = isPlaying, celebrate = celebrate) {
-//        viewModel.handleCountDownTimer()
-//    }
-//
-//}
-
-
 @Composable
-fun PlayButton() {
+fun PlayButton(viewModel: MainViewModel) {
     Image(
         painterResource(R.drawable.play_button),
         contentDescription = "",
         modifier = Modifier
             .size(40.dp)
-            .clickable { /*TODO*/ }
+            .clickable {
+                if (isGameStarted) {
+                    viewModel.stopGame()
+                } else {
+                    viewModel.startGame()
+                }
+            }
     )
 }
 
 @Composable
-fun ResetButton() {
+fun ResetButton(viewModel: MainViewModel) {
     Image(
         painterResource(R.drawable.replay_button),
         contentDescription = "",
         modifier = Modifier
             .size(40.dp)
-            .clickable { /*TODO*/ }
+            .clickable { viewModel.resetGame() }
     )
 }
 

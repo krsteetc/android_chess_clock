@@ -58,14 +58,14 @@ fun MainScreen(viewModel: MainViewModel) {
             }
             Row(
                 modifier = Modifier.weight(7f),
-                ) {
+            ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ResetButton()
-                    PlayButton()
+                    ResetButton(viewModel)
+                    PlayButton(viewModel)
                     TimeButton()
                     SoundButton()
                 }
@@ -82,6 +82,7 @@ fun MainScreen(viewModel: MainViewModel) {
 @Composable
 fun DefaultPreview() {
     ChessClockTheme {
-        //MainScreen()
+
+        // MainScreen(viewModel)
     }
 }
