@@ -16,8 +16,8 @@ data class ClockModel(
     val isPlayer1OnTurn: Boolean = true,
     val player1TimeToDisplay: Long = 120L,
     val player2TimeToDisplay: Long = 120L,
-    var timeRemainingForPlayer1: Long = 120L,
-    var timeRemainingForPlayer2: Long = 120L
+    var timeRemainingForPlayer1: Long = 120 * 1000L,
+    var timeRemainingForPlayer2: Long = 120 * 1000L
 ) {
 }
 
@@ -26,37 +26,42 @@ class MainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<ClockModel>(ClockModel())
     val uiState = _uiState.asStateFlow()
 
+    var countDownTimerPlayer1: CountDownTimer? = null
 
-    val countDownTimerPlayer1 = object : CountDownTimer(uiState.value.timeRemainingForPlayer1 * 1000, 1000) {
-        override fun onTick(millisRemaining: Long) {
-            tickOnEverySecond(millisRemaining)
-        }
+    //todo google for solution that have count-down timer with pause function
+    fun startCountDownForPlayer1() {
+        countDownTimerPlayer1?.cancel()
+        countDownTimerPlayer1 =
+            object : CountDownTimer(uiState.value.timeRemainingForPlayer1, 1000) {
+                override fun onTick(millisRemaining: Long) {
+                    tickOnEverySecond(millisRemaining)
+                }
 
-        override fun onFinish() {
-        }
+                override fun onFinish() {
+                }
+            }
+        countDownTimerPlayer1?.start()
     }
-    val countDownTimerPlayer2 = object : CountDownTimer(uiState.value.timeRemainingForPlayer2 * 1000, 1000) {
-        override fun onTick(millisRemaining: Long) {
-            tickOnEverySecond(millisRemaining)
-        }
 
-        override fun onFinish() {
-        }
+    var countDownTimerPlayer2: CountDownTimer? = null
+
+    fun startCountDownForPlayer2() {
+        countDownTimerPlayer2?.cancel()
+        countDownTimerPlayer2 =
+            object : CountDownTimer(uiState.value.timeRemainingForPlayer2, 1000) {
+                override fun onTick(millisRemaining: Long) {
+                    tickOnEverySecond(millisRemaining)
+                }
+
+                override fun onFinish() {
+                }
+            }
+        countDownTimerPlayer2?.start()
     }
 
     fun setPlayer1Time(newPlayer1Time: Long) {
         _uiState.update {
             it.copy(player1TimeToDisplay = newPlayer1Time)
-        }
-    }
-    fun setPlayer1TimeRemaining(newPlayer1Time: Long) {
-        _uiState.update {
-            it.copy(timeRemainingForPlayer1 = newPlayer1Time)
-        }
-    }
-    fun setPlayer2TimeRemaining(newPlayer2Time: Long) {
-        _uiState.update {
-            it.copy(timeRemainingForPlayer2 = newPlayer2Time)
         }
     }
 
@@ -66,54 +71,62 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setPlayer1TimeRemaining(newPlayer1Time: Long) {
+        _uiState.update {
+            it.copy(timeRemainingForPlayer1 = newPlayer1Time)
+        }
+    }
+
+    fun setPlayer2TimeRemaining(newPlayer2Time: Long) {
+        _uiState.update {
+            it.copy(timeRemainingForPlayer2 = newPlayer2Time)
+        }
+    }
+
     fun tickOnEverySecond(millisRemaining: Long) {
         if (isPlayer1Turn) {
             setPlayer1Time(millisRemaining / 1000)
             setPlayer1TimeRemaining(millisRemaining)
-            Log.d("AASSS", " " + millisRemaining)
         } else {
             setPlayer2Time(millisRemaining / 1000)
             setPlayer2TimeRemaining(millisRemaining)
-            Log.d("AASSS2", " " + millisRemaining)
         }
     }
 
     fun startGame() {
         if (!uiState.value.isGameStarted) {
             if (isPlayer1Turn) {
-                countDownTimerPlayer1.start()
+                startCountDownForPlayer1()
             } else {
-                countDownTimerPlayer2.start()
+                startCountDownForPlayer2()
             }
             isGameStarted = true
         }
     }
 
     fun stopGame() {
-        countDownTimerPlayer1.cancel()
-        countDownTimerPlayer2.cancel()
+        countDownTimerPlayer1?.cancel()
+        countDownTimerPlayer2?.cancel()
         isGameStarted = false
     }
 
     fun resetGame() {
-        countDownTimerPlayer1.cancel()
-        countDownTimerPlayer2.cancel()
+        countDownTimerPlayer1?.cancel()
+        countDownTimerPlayer2?.cancel()
         isGameStarted = false
-        _uiState.update {
-            it.copy(player1TimeToDisplay = 120L)
-        }
-        _uiState.update {
-            it.copy(player2TimeToDisplay = 120L)
-        }
+        setPlayer1Time(120L)
+        setPlayer2Time(120L)
+        setPlayer1TimeRemaining(120*1000L)
+        setPlayer2TimeRemaining(120*1000L)
     }
 
     fun switchTurn() {
         if (!isPlayer1Turn) {
-            countDownTimerPlayer1.cancel()
-            countDownTimerPlayer2.start()
+            countDownTimerPlayer1?.cancel()
+            startCountDownForPlayer2()
         } else {
-            countDownTimerPlayer1.start()
-            countDownTimerPlayer2.cancel()
+            startCountDownForPlayer1()
+            countDownTimerPlayer2?.cancel()
         }
     }
 }
