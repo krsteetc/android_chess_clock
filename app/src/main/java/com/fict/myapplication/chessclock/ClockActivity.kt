@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.fict.example.componentsplayground.activities.tempates.MainViewModel
@@ -32,8 +33,7 @@ class MainActivity : ComponentActivity() {
 
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
                     //Display
                     MainScreen(viewModel)
@@ -46,15 +46,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
+    val context = LocalContext.current
     Surface(
-        color = Color.DarkGray,
-        modifier = Modifier.fillMaxSize()
+        color = Color.DarkGray, modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
             Column(Modifier.weight(46.5f)) {
-                Player1(viewModel)
+                Player1(viewModel, context)
             }
             Row(
                 modifier = Modifier.weight(7f),
@@ -64,17 +64,19 @@ fun MainScreen(viewModel: MainViewModel) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ResetButton(viewModel)
-                    PlayButton(viewModel)
-                    TimeButton()
-                    SoundButton()
+                    ResetButton(context)
+                    PlayButton(viewModel, context)
+                    TimeButton(viewModel, context)
+                    SoundButton(context)
                 }
             }
 
             Column(Modifier.weight(46.5f)) {
-                Player2(viewModel)
+                Player2(viewModel, context)
             }
         }
+        ResetTimerDialog(viewModel, context)
+        TimeManagerDialog(viewModel, context)
     }
 }
 

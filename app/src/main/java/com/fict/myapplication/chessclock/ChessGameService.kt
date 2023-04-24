@@ -7,5 +7,7 @@ import androidx.compose.runtime.setValue
 //do not use it directly
 var isPlayer1Turn by mutableStateOf(false)
 var isGameStarted by mutableStateOf(false)
-//var player1Time by mutableStateOf(120L)
-//var player2Time by mutableStateOf(120L)
+var isResetDialogOpened by mutableStateOf(false)
+var isTimeManagerOpened by mutableStateOf(false)
+var isMediaPlayerEnabled by mutableStateOf(true)
+var isGameFinished by mutableStateOf(false)

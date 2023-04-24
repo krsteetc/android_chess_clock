@@ -12,6 +12,11 @@ val LightGray = Color(0xFFCDCDCD)
 val DarkGray = Color(0xFF686868)
 val MidGray = Color(0xFF8E8E8E)
 val DarkGreen = Color(0xFF11A000)
+val MidRed = Color(0xFF5F0000)
+
+val Colors.midRed: Color
+@Composable
+get() = MidRed
 
 val Colors.darkGreen: Color
     @Composable
